@@ -2,6 +2,7 @@ import pandas as pd
 import streamlit as st
 import numpy as np
 import datetime
+import seaborn as sns
 
 
 @st.cache(allow_output_mutation=True)
@@ -67,7 +68,7 @@ def price_range(data):  # creates a slider for max price after filtering all cri
         lower = int(lower)
         upper = int(upper)
         global ranges
-        ranges = data[data['price'] <= upper][data['price'] >= lower][data['availability_365'] != 0][['id', 'name', 'neighbourhood_cleansed', 'price', 'availability_365']]  # ensures AirBnB is available
+        ranges = data[data['price'] <= upper][data['price'] >= lower][data['availability_365'] != 0][['id', 'name', 'neighbourhood_cleansed', 'price', 'room_type','availability_365']]  # ensures AirBnB is available
         ranges = ranges.sort_values(by=['price']).reset_index().drop('index', axis=1)  # sorts in terms of  lowest price and resets the index
         # and then drops the original index column that way the options will be numbers from 0 onwards
         st.subheader("Below are the options according to the filters chosen:")
@@ -90,7 +91,9 @@ def neighborhood(data):
 def room_finder():
     st.title("LET'S FIND THE AIR BNB OF YOUR DREAMS!")
     dates()
-    price_range(neighborhood(room(min_nights(LA_listings))))
+    list_data = price_range(neighborhood(room(min_nights(LA_listings))))
+    fig = sns.catplot(list_data["room_type"], data=list_data, kind="count", height=8)
+    st.pyplot(fig)
 # page 3
 
 
