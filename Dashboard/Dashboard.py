@@ -19,7 +19,7 @@ def homepage():
     st.image('Logo.jpeg', width=500)
     st.markdown("<h2 style='text-align: center;'>Find your perfect getaway today!!</h2>", unsafe_allow_html=True)
     st.write('**About this Dashboard:**', 'Welcome to the LA Airbnb finder! Krtin and Liz have created this dashboard so viewers can find an Airbnb in the LA area based on their specifications. Additionally, they can easily read about various details of their rental or host by supplying the ID number. All the data utilized in this dashboard is from the listings and reviews csv files.')
-    st.write('**About the Datasets:** We have retrieved two datasets dealing with Los Angeles Airbnb data. The listings dataset gives various details about the Airbnb rental itself along with host information. The reviews dataset gives full reviews of certain Airbnb rentals while the listings dataset just gave computed scores.')
+    st.write('**About the Datasets:** We have retrieved a dataset dealing with Los Angeles Airbnb data. The listings dataset gives various details about the Airbnb rental itself along with host information.')
     st.write('**Number of Air BnBs Available: **', len(LA_listings['availability_365'].astype(float) > 0))
 
 # code for page 2
@@ -53,8 +53,8 @@ def room(data):  # function to filter the type of room wanted by the user
 
 
 def min_nights(data):  # Ensures the number of nights is equal to or greater than the minimum requirement of the Air BnB
-    d = data[data['minimum_nights'] <= stay.days]
-    return d
+    opt = data[stay.days >= data['minimum_nights']][stay.days <= data['maximum_nights']]
+    return opt
 
 
 def price_range(data):  # creates a slider for max price after filtering all criteria and outputing options
@@ -92,8 +92,10 @@ def room_finder():
     st.title("LET'S FIND THE AIR BNB OF YOUR DREAMS!")
     dates()
     list_data = price_range(neighborhood(room(min_nights(LA_listings))))
-    fig = sns.catplot(list_data["room_type"], data=list_data, kind="count", height=8)
-    st.pyplot(fig)
+    figure = sns.catplot(list_data["room_type"], kind='count',data=list_data, height=9)
+    figure.set(xlabel='Type of Room', ylabel='Count of Rooms')
+    figure.fig.suptitle('Count of the Types of Rooms Available')
+    st.pyplot(figure)
 # page 3
 
 
@@ -113,7 +115,7 @@ def profile(ids, data):
     name = id_filter['name'].iloc[0]  # obtains Air BnB name
     neighborhood_name = id_filter['neighbourhood_cleansed'].iloc[0]  # obtains neighborhood
     room_type = id_filter['room_type'].iloc[0]  # obtains room type
-    amenities = ",".join(id_filter['amenities'])  # obtains the amenities
+    amenities = id_filter['amenities'].iloc[0][2:-2].replace('\", \"',', ')  # obtains the amenities and formats the output
     price = id_filter['price'].iloc[0]  # obtains price per night
     accommodation = int(id_filter['accommodates'].iloc[0])  # obtains the number of people that can stay
     baths = id_filter['bathrooms'].iloc[0]   # obtains the number of bathrooms it has
