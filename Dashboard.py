@@ -1,19 +1,22 @@
+# import required packages
 import pandas as pd
 import streamlit as st
 import numpy as np
 import datetime
 import seaborn as sns
 
-
+# Create a function to load data to increase the speed of the dashboard
 @st.cache(allow_output_mutation=True)
 def load_listing_data():
     return pd.read_excel('dashboard data.xls', header=0)  # this speeds up the reloading process when the user changes the inputs
 
-
+# Loading data into a variable
 LA_listings = load_listing_data()
+
+# Creating a navigation list for the dashboard
 navigation = ["Home", "Air BnB Finder", "Air BnB Profile"]
 
-
+# code for page 1: Homepage
 def homepage():
     st.markdown("<h1 style='text-align: center;'>Welcome to the LA Air BnB Finder!</h1>", unsafe_allow_html=True)
     st.image('Logo.jpeg', width=500)
@@ -22,7 +25,7 @@ def homepage():
     st.write('**About the Datasets:** We have retrieved a dataset dealing with Los Angeles Airbnb data. The listings dataset gives various details about the Airbnb rental itself along with host information.')
     st.write('**Number of Air BnBs Available: **', len(LA_listings['availability_365'].astype(float) > 0))
 
-# code for page 2
+# code for page 2: Air bnb Finder
 
 
 def dates():  # function to determine the check in and check out dates and thus number of nights
@@ -31,7 +34,7 @@ def dates():  # function to determine the check in and check out dates and thus 
     check_in = st.date_input('Check in', today)
     check_out = st.date_input('Check out', tomorrow)
     if check_in >= check_out:
-        st.error('Error: Check out must fall after Check in')  # error message if check out date before check in
+        st.error('Error: Check out must fall after Check in')  # error message if check out date before check in which cannot be possible
     global stay
     stay = check_out-check_in
     if stay.days == 1:  # formatting output for correct syntax
@@ -64,11 +67,11 @@ def price_range(data):  # creates a slider for max price after filtering all cri
     else:
         minimum = int(data['price'].min())
         maximum = int(data['price'].max())
-        lower, upper = st.slider("Range", minimum, maximum, (minimum, maximum+1))  # ensures than when min and max is the same, there is no error
-        lower = int(lower)
+        lower, upper = st.slider("Range", minimum, maximum, (minimum, maximum+1))  # the +1 for the range ensures that when min and max is the same, there is no error
+        lower = int(lower) # convert string price value to integer
         upper = int(upper)
         global ranges
-        ranges = data[data['price'] <= upper][data['price'] >= lower][data['availability_365'] != 0][['id', 'name', 'neighbourhood_cleansed', 'price', 'room_type','availability_365']]  # ensures AirBnB is available
+        ranges = data[data['price'] <= upper][data['price'] >= lower][data['availability_365'] != 0][['id', 'name', 'neighbourhood_cleansed', 'price', 'room_type','availability_365']]  # ensures AirBnB is available by filtering the data
         ranges = ranges.sort_values(by=['price']).reset_index().drop('index', axis=1)  # sorts in terms of  lowest price and resets the index
         # and then drops the original index column that way the options will be numbers from 0 onwards
         st.subheader("Below are the options according to the filters chosen:")
@@ -79,12 +82,12 @@ def price_range(data):  # creates a slider for max price after filtering all cri
 
 def neighborhood(data):
     st.write("Which neighbourhood are you looking for?")
-    neighborhoods = list(pd.Series(LA_listings['neighbourhood_cleansed'].unique()).append(pd.Series('All')).sort_values())  # adding an all function for the neighborhood in case user has no preferance
+    neighborhoods = list(pd.Series(LA_listings['neighbourhood_cleansed'].unique()).append(pd.Series('All')).sort_values())  # adding an all function for the neighborhood in case user has no preference
     area = st.selectbox('Neighborhood:', neighborhoods, index=5)  # sets default value to value with index 5 which is 'All'
     if area == 'All':
         neighborhood_data = data
     else:
-        neighborhood_data = data[data['neighbourhood_cleansed'] == area]
+        neighborhood_data = data[data['neighbourhood_cleansed'] == area] # subset the data based on neighborhood choice
     return neighborhood_data
 
 
@@ -96,7 +99,8 @@ def room_finder():
     figure.set(xlabel='Type of Room', ylabel='Count of Rooms')
     figure.fig.suptitle('Count of the Types of Rooms Available')
     st.pyplot(figure)
-# page 3
+
+# code for page 3: Air bnb Profile
 
 
 def profile(ids, data):
@@ -156,8 +160,7 @@ def profile(ids, data):
     st.write(f"**Neighborhood:** {neighborhood_name}")
     st.subheader(f"**Minimum Cost:** ${min_cost:,.2f}")
 
-# main code
-
+# main code to run everything
 
 def main():
     page = st.sidebar.radio("Navigation", navigation)
