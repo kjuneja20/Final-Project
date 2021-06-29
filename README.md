@@ -11,7 +11,7 @@ Overall, this project was interesting to partake in since we were exposed to new
 
 Link to Project Report: https://bentleyedu-my.sharepoint.com/:w:/g/personal/eveilleux_falcon_bentley_edu/EdkgBV0WeOlPg3Co1vP9u9kBmF9PDMgXYZtjHPDgr70llw?e=eVvE0D&wdLOR=cE7BDC62C-0D8D-FE48-AD1C-961FE8453D45
 
-Link to Dashboard: 
+Link to Dashboard: https://serene-peak-27791.herokuapp.com
 
 Link to Deepnote Project: https://deepnote.com/project/Airbnb-Final-Project-Z8Fs1bFKQdC5BONK3sWr_g/%2Fnotebook.ipynb
 
