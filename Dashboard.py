@@ -24,6 +24,12 @@ def homepage():
     st.write('**About this Dashboard:**', 'Welcome to the LA Airbnb finder! Krtin and Liz have created this dashboard so viewers can find an Airbnb in the LA area based on their specifications. Additionally, they can easily read about various details of their rental or host by supplying the ID number. All the data utilized in this dashboard is from the listings and reviews csv files.')
     st.write('**About the Datasets:** We have retrieved a dataset dealing with Los Angeles Airbnb data. The listings dataset gives various details about the Airbnb rental itself along with host information.')
     st.write('**Number of Air BnBs Available: **', len(LA_listings['availability_365'].astype(float) > 0))
+    st.header("")
+    st.subheader("LINKS")
+    st.markdown("Link to Project Report: https://bentleyedu-my.sharepoint.com/:w:/g/personal/eveilleux_falcon_bentley_edu/EdkgBV0WeOlPg3Co1vP9u9kBmF9PDMgXYZtjHPDgr70llw?e=eVvE0D&wdLOR=cE7BDC62C-0D8D-FE48-AD1C-961FE8453D45")
+    st.markdown("Link to Deepnote Code: https://deepnote.com/@elizabeth-veilleux/Airbnb-Final-Project-Z8Fs1bFKQdC5BONK3sWr_g")
+    st.markdown("Link to Github Repository: https://github.com/kjuneja20/Final-Project")
+    st.markdown("Link to Published Deepnote Project: https://deepnote.com/@elizabeth-veilleux/Airbnb-Final-Project-Z8Fs1bFKQdC5BONK3sWr_g")
 
 # code for page 2: Air bnb Finder
 
@@ -170,6 +176,7 @@ def main():
         room_finder()
     if page == "Air BnB Profile":
         profile(LA_listings['id'], LA_listings)
+
 
 
 main()
